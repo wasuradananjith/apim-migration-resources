@@ -1042,6 +1042,10 @@ public class MigrateFrom110to200 extends MigrationClientBase implements Migratio
 
     }
 
+    @Override
+    public void userRolesMigration() throws APIMigrationException {
+    }
+
     /**
      * This method updates a policy name
      *

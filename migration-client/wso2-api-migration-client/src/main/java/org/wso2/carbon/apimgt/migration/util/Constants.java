@@ -63,6 +63,7 @@ public class Constants {
     public static final String ARG_OPTIONS_MIGRATE_THROTTLING = "migrateThrottling";
     public static final String ARG_OPTIONS_DEPLOY_POLICIES = "deployPolicies";
     public static final String ARG_POPULATE_SPAPP = "populateSPAPP";
+    public static final String ARG_MIGRATE_USER_ROLES = "migrateUserRoles";
 
     // Synapse configuration related
     public static final String SYNAPSE_API_ROOT_ELEMENT = "api";
@@ -285,7 +286,9 @@ public class Constants {
     public static final String AM_POLICY_APPLICATION = "AM_POLICY_APPLICATION";
     public static final String AM_API_THROTTLE_POLICY = "AM_API_THROTTLE_POLICY";
 
-
+    // Table field names
+    public static final String UM_ROLE_NAME = "UM_ROLE_NAME";
+    public static final String UM_DOMAIN_NAME = "UM_DOMAIN_NAME";
 
     public static final String TIER_DESCRIPTION = "Allows {0} request per minute";
     public static final String TIER_API_LEVEL = "apiLevel";

@@ -19,11 +19,7 @@ package org.wso2.carbon.apimgt.migration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
-import org.wso2.carbon.apimgt.migration.client.MigrateFrom200;
-import org.wso2.carbon.apimgt.migration.client.MigrateFrom210;
-import org.wso2.carbon.apimgt.migration.client.MigrationClient;
-import org.wso2.carbon.apimgt.migration.client.MigrationClientFactory;
-import org.wso2.carbon.apimgt.migration.client.MigrationExecutor;
+import org.wso2.carbon.apimgt.migration.client.*;
 import org.wso2.carbon.apimgt.migration.client.internal.ServiceHolder;
 import org.wso2.carbon.apimgt.migration.client.sp_migration.APIMStatMigrationClient;
 import org.wso2.carbon.apimgt.migration.client.sp_migration.APIMStatMigrationConstants;
@@ -31,6 +27,7 @@ import org.wso2.carbon.apimgt.migration.client.sp_migration.DBManager;
 import org.wso2.carbon.apimgt.migration.client.sp_migration.DBManagerImpl;
 import org.wso2.carbon.apimgt.migration.util.Constants;
 import org.wso2.carbon.apimgt.migration.util.RegistryServiceImpl;
+import org.wso2.carbon.apimgt.migration.util.SharedDBUtil;
 import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -54,6 +51,7 @@ public class APIMMigrationService implements ServerStartupObserver {
     public void completedServerStartup() {
         try {
             APIMgtDBUtil.initialize();
+            SharedDBUtil.initialize();
         } catch (Exception e) {
             //APIMgtDBUtil.initialize() throws generic exception
             log.error("Error occurred while initializing DB Util ", e);
@@ -78,6 +76,7 @@ public class APIMMigrationService implements ServerStartupObserver {
                 System.getProperty(Constants.ARG_REMOVE_DECRYPTION_FAILED_CONSUMER_KEYS_FROM_DB));
         boolean isSPMigration = Boolean.parseBoolean(System.getProperty(APIMStatMigrationConstants.ARG_MIGRATE_SP));
         boolean isSP_APP_Population = Boolean.parseBoolean(System.getProperty(Constants.ARG_POPULATE_SPAPP));
+        boolean isUserRoleMigration = Boolean.parseBoolean(System.getProperty(Constants.ARG_MIGRATE_USER_ROLES));
 
         try {
             RegistryServiceImpl registryService = new RegistryServiceImpl();
@@ -105,6 +104,10 @@ public class APIMMigrationService implements ServerStartupObserver {
                 MigrationClient migrateFrom210 = new MigrateFrom210(tenants, blackListTenants, tenantRange, registryService, tenantManager);
                 log.info("Migrating WSO2 API Manager registry resources");
                 migrateFrom210.registryResourceMigration();
+            } else if (isUserRoleMigration) {
+                MigrationClient migrateUserRoles = new UserRolesMigrationClient(tenants, blackListTenants, tenantRange, registryService, tenantManager);
+                log.info("Migrating WSO2 API Manager user roles");
+                migrateUserRoles.userRolesMigration();
             } else {
                 MigrationClientFactory.initFactory(tenants, blackListTenants, tenantRange, registryService, tenantManager,
                         removeDecryptionFailedKeysFromDB);
@@ -122,6 +125,7 @@ public class APIMMigrationService implements ServerStartupObserver {
                 arguments.setStatMigration(isStatMigration);
                 arguments.setOptions(options);
                 arguments.setSP_APP_Migration(isSP_APP_Population);
+                arguments.setMigrateUserRoles(isUserRoleMigration);
                 MigrationExecutor.execute(arguments);
             }
         } catch (APIMigrationException e) {

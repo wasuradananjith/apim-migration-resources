@@ -81,7 +81,7 @@ public interface MigrationClient {
      * @throws APIMigrationException
      */
     void tierMigration(List<String> options) throws APIMigrationException;
-    
+
     /**
      * This method is used to update the API artifacts in the registry to trigger indexer.
      * @throws APIMigrationException
@@ -92,4 +92,10 @@ public interface MigrationClient {
      * This method is to populate SP_APP table
      */
     void populateSPAPPs() throws APIMigrationException;
+
+    /**
+     * This method is used to retrieve user roles based on permissions and update the scopes in the the tenant-conf.
+     * @throws APIMigrationException
+     */
+    void userRolesMigration() throws APIMigrationException;
 }

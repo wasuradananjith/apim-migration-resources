@@ -834,4 +834,8 @@ public class MigrateFrom19to110 extends MigrationClientBase implements Migration
     public void populateSPAPPs() throws APIMigrationException {
 
     }
+
+    @Override
+    public void userRolesMigration() throws APIMigrationException {
+    }
 }

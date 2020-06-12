@@ -174,4 +174,8 @@ public class APIMStatMigrationClient extends MigrationClientBase implements Migr
     @Override
     public void populateSPAPPs() throws APIMigrationException {
     }
+
+    @Override
+    public void userRolesMigration() throws APIMigrationException {
+    }
 }

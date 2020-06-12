@@ -74,4 +74,8 @@ public class MigrateFrom200 extends MigrationClientBase implements MigrationClie
     @Override
     public void populateSPAPPs() throws APIMigrationException {
     }
+
+    @Override
+    public void userRolesMigration() throws APIMigrationException {
+    }
 }

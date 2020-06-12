@@ -18,8 +18,13 @@ package org.wso2.carbon.apimgt.migration.client;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.util.SystemOutLogger;
+import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.migration.APIMigrationException;
 import org.wso2.carbon.apimgt.migration.client.sp_migration.APIMStatMigrationException;
+import org.wso2.carbon.apimgt.migration.dao.SharedDAO;
+import org.wso2.carbon.apimgt.migration.dto.UserRoleFromPermissionDTO;
 import org.wso2.carbon.apimgt.migration.util.RegistryService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.user.api.Tenant;
@@ -31,6 +36,7 @@ import org.wso2.carbon.utils.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 public class MigrateFrom210 extends MigrationClientBase implements MigrationClient {
@@ -79,6 +85,10 @@ public class MigrateFrom210 extends MigrationClientBase implements MigrationClie
 
     @Override
     public void populateSPAPPs() throws APIMigrationException {
+    }
+
+    @Override
+    public void userRolesMigration() throws APIMigrationException {
     }
 
     /**

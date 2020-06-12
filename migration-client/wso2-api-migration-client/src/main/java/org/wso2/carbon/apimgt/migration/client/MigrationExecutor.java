@@ -47,6 +47,7 @@ public final class MigrationExecutor {
         private boolean isStatMigration;
         private boolean isTriggerAPIIndexer;
         private boolean isSP_APP_Population;
+        private boolean isMigrateUserRoles;
 
         public void setMigrateAll(boolean migrateAll) {
             this.migrateAll = migrateAll;
@@ -99,13 +100,17 @@ public final class MigrationExecutor {
         public void setSP_APP_Migration(boolean isSP_APP_Population) {
             this.isSP_APP_Population = isSP_APP_Population;
         }
+
+        public void setMigrateUserRoles(boolean isMigrateUserRoles) {
+            this.isMigrateUserRoles = isMigrateUserRoles;
+        }
     }
 
 
     public static void execute(Arguments arguments) throws APIMigrationException,
             SQLException, APIMStatMigrationException {
         if (arguments.component != null && arguments.component.contains(Constants.APIM_COMPONENT)) {
-            if (arguments.migrateFromVersion != null) {
+            if (arguments.migrateFromVersion != null || arguments.isMigrateUserRoles) {
                 MigrationClient[] migrationClients = MigrationClientFactory.getAllClients(arguments.migrateFromVersion);
 
                 if (migrationClients.length > 0) {
@@ -150,6 +155,7 @@ public final class MigrationExecutor {
             migrationClient.registryResourceMigration();
             migrationClient.fileSystemMigration();
             migrationClient.populateSPAPPs();
+            migrationClient.userRolesMigration();
         } else {
             //Only performs database migration
             if (arguments.isDBMigration) {
@@ -175,6 +181,11 @@ public final class MigrationExecutor {
             if (arguments.isSP_APP_Population) {
                 log.info("Populating SP_APP table");
                 migrationClient.populateSPAPPs();
+            }
+            //Only performs user roles migration
+            if (arguments.isMigrateUserRoles) {
+                log.info("Migrating WSO2 API Manager user roles");
+                migrationClient.userRolesMigration();
             }
         }
         //Old resource cleanup
